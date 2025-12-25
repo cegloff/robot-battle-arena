@@ -9,10 +9,7 @@ data class RobotPart(
     val speed: Int = 0
 )
 
-data class Robot(
-    val name: String,
-    val parts: List<RobotPart>
-) {
+class Robot(var name: String, var parts: MutableList<RobotPart> = mutableListOf()) {
     fun totalHealth(): Int = parts.sumOf { it.health }
 
     fun totalDamage(): Int = parts.sumOf { it.damage }

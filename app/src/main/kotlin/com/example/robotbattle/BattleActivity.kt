@@ -1,6 +1,5 @@
 package com.example.robotbattle
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,8 +16,10 @@ class BattleActivity : AppCompatActivity() {
         tvStatus = findViewById(R.id.tv_status)
 
         // Placeholder: load two robots
-        val playerRobot = Robot("Player", listOf(RobotPart("wheel", "Wheel", 50), RobotPart("weapon", "Gun", 20, 10, 50)))
-        val enemyRobot = Robot("Enemy", listOf(RobotPart("wheel", "Wheel", 50), RobotPart("weapon", "Gun", 20, 15, 60)))
+        val playerParts = mutableListOf(RobotPart("wheel", "Wheel", 50), RobotPart("weapon", "Gun", 20, 10, 50))
+        val playerRobot = Robot("Player", playerParts)
+        val enemyParts = mutableListOf(RobotPart("wheel", "Wheel", 50), RobotPart("weapon", "Gun", 20, 15, 60))
+        val enemyRobot = Robot("Enemy", enemyParts)
 
         gameView.startBattle(playerRobot, enemyRobot)
     }
