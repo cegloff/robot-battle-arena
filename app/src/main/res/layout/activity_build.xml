@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/et_robot_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Robot Name" />
+
+    <Button
+        android:id="@+id/btn_add_wheel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_wheel" />
+
+    <Button
+        android:id="@+id/btn_add_weapon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_weapon" />
+
+    <TextView
+        android:id="@+id/tv_parts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Parts: None" />
+
+    <Button
+        android:id="@+id/btn_import"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/import_robot" />
+
+    <Button
+        android:id="@+id/btn_export"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/export_robot" />
+
+</LinearLayout>

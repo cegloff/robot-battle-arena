@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Robot Battle Arena</string>
+    <string name="build_robot">Build Robot</string>
+    <string name="battle">Battle</string>
+    <string name="add_wheel">Add Wheel</string>
+    <string name="add_weapon">Add Weapon</string>
+    <string name="export_robot">Export Robot</string>
+    <string name="import_robot">Import Robot</string>
+</resources>
