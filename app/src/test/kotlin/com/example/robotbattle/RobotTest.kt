@@ -41,4 +41,30 @@ class RobotTest {
         assertEquals(0, robot.totalHealth())
         assertEquals(0, robot.totalDamage())
     }
+
+    @Test
+    fun testValidationValid() {
+        val robot = Robot("Valid", mutableListOf(
+            Robot.PART_TEMPLATES[0].toPart(), // mobility
+            Robot.PART_TEMPLATES[3].toPart() // weapon
+        ))
+        assertTrue(robot.validate() is ValidationResult.Success)
+    }
+
+    @Test
+    fun testValidationNoMobility() {
+        val robot = Robot("Invalid", mutableListOf(Robot.PART_TEMPLATES[3].toPart()))
+        val result = robot.validate()
+        assertTrue(result is ValidationResult.Error)
+        assertEquals("Must have at least one mobility part", (result as ValidationResult.Error).message)
+    }
+
+    @Test
+    fun testValidationOverParts() {
+        val parts = mutableListOf<RobotPart>()
+        for (i in 0..6) parts.add(Robot.PART_TEMPLATES[0].toPart())
+        val robot = Robot("Invalid", parts)
+        val result = robot.validate()
+        assertTrue(result is ValidationResult.Error)
+    }
 }
