@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".BuildActivity" />
         <activity android:name=".BattleActivity" />
+        <activity android:name=".ui.SavedRobotsActivity" />
     </application>
 
 </manifest>
