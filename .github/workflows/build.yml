@@ -19,11 +19,42 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Set up Android SDK
+      run: |
+        # Install Android SDK command-line tools
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
+        mkdir latest
+        cd latest
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+        unzip cmdline-tools.zip
+        rm cmdline-tools.zip
+        mv cmdline-tools/* .
+        rmdir cmdline-tools
+        cd ../..
+        
+        # Set environment variables
+        echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+        echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
+        
+        # Accept licenses and install required components (matching compileSdk 34)
+        yes | sdkmanager --licenses
+        sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew || echo "No gradlew, skipping"
+      run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build --stacktrace || gradle build --stacktrace
+    - name: Cache Gradle files
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
-    - name: Run unit tests
-      run: ./gradlew test --stacktrace || gradle test --stacktrace
+    - name: Build with Gradle (includes tests)
+      run: ./gradlew build --stacktrace
