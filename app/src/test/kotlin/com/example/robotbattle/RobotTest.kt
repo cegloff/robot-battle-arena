@@ -8,7 +8,7 @@ class RobotTest {
     @Test
     fun testRobotCreation() {
         val part = RobotPart("wheel", "Test Wheel", health = 50, speed = 5)
-        val robot = Robot("Test Robot", listOf(part))
+        val robot = Robot("Test Robot", mutableListOf(part))
         assertEquals("Test Robot", robot.name)
         assertEquals(1, robot.parts.size)
         assertEquals("Test Wheel", robot.parts[0].name)
@@ -16,7 +16,7 @@ class RobotTest {
 
     @Test
     fun testTotalHealth() {
-        val parts = listOf(
+        val parts = mutableListOf(
             RobotPart("wheel", "Wheel", 50),
             RobotPart("weapon", "Gun", 20)
         )
@@ -26,7 +26,7 @@ class RobotTest {
 
     @Test
     fun testTotalDamage() {
-        val parts = listOf(
+        val parts = mutableListOf(
             RobotPart("weapon", "Gun", damage = 10),
             RobotPart("weapon", "Laser", damage = 20)
         )
@@ -37,7 +37,7 @@ class RobotTest {
     // Add more tests for coverage
     @Test
     fun testEmptyRobot() {
-        val robot = Robot("Empty", emptyList())
+        val robot = Robot("Empty")
         assertEquals(0, robot.totalHealth())
         assertEquals(0, robot.totalDamage())
     }
