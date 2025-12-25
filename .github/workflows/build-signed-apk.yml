@@ -17,18 +17,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        cmdline-tools-version: '16.0'
-        accept-android-sdk-licenses: 'yes'
-        packages: |
-          platforms;android-34
-          build-tools;34.0.0
-          platform-tools
+    - name: Set up Android SDK environment
+      run: |
+        echo "ANDROID_SDK_ROOT=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+        echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
 
-    - name: List available SDK packages (debug)
-      run: sdkmanager --list | grep -E "(platforms|build-tools|ndk)"
+    - name: Accept Android SDK licenses
+      run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -55,13 +50,13 @@ jobs:
     - name: Sign APK with self-signed certificate
       run: |
         # Align the APK first
-        $ANDROID_HOME/build-tools/34.0.0/zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
+        $ANDROID_SDK_ROOT/build-tools/34.0.0/zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
         
         # Sign the aligned APK
-        $ANDROID_HOME/build-tools/34.0.0/apksigner sign --ks my-release-key.jks --ks-pass pass:password123 --key-pass pass:password123 --out app-release-signed.apk app-release-aligned.apk
+        $ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner sign --ks my-release-key.jks --ks-pass pass:password123 --key-pass pass:password123 --out app-release-signed.apk app-release-aligned.apk
         
         # Verify the signed APK
-        $ANDROID_HOME/build-tools/34.0.0/apksigner verify app-release-signed.apk
+        $ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner verify app-release-signed.apk
 
     - name: Upload signed APK
       uses: actions/upload-artifact@v4
