@@ -15,6 +15,7 @@ sealed class ValidationResult {
 }
 
 class Robot(var name: String, var parts: MutableList<RobotPart> = mutableListOf()) {
+    var id: Long? = null
     fun totalHealth(): Int = parts.sumOf { it.health }
 
     fun totalDamage(): Int = parts.sumOf { it.damage }
