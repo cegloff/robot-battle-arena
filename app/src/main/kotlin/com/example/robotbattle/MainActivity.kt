@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.robotbattle.ui.SavedRobotsActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +17,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_battle).setOnClickListener {
             startActivity(Intent(this, BattleActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_create_new).setOnClickListener {
+            startActivity(Intent(this, BuildActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btn_load_saved).setOnClickListener {
+            startActivity(Intent(this, SavedRobotsActivity::class.java))
         }
     }
 }

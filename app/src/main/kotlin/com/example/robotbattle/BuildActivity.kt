@@ -8,12 +8,17 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.robotbattle.ui.RobotViewModel
 import com.google.gson.Gson
 import java.io.BufferedReader
 
 class BuildActivity : AppCompatActivity() {
-    private lateinit var robot: Robot
+    private lateinit var viewModel: RobotViewModel
     private lateinit var etName: EditText
     private lateinit var tvParts: TextView
     private val gson = Gson()
@@ -39,16 +44,20 @@ class BuildActivity : AppCompatActivity() {
 
         etName = findViewById(R.id.et_robot_name)
         tvParts = findViewById(R.id.tv_parts)
-        robot = Robot("New Robot", mutableListOf())
 
-        findViewById<Button>(R.id.btn_add_wheel).setOnClickListener {
-            robot.parts.add(RobotPart("wheel", "Basic Wheel", health = 50, speed = 5))
-            updateUI()
+        val db = AppDatabase.getDatabase(this)
+        val repository = RobotRepository(db.robotDao())
+        viewModel = viewModels<RobotViewModel> { RobotViewModelFactory(repository) }.value
+
+        val robotId = intent.getLongExtra("robot_id", -1)
+        if (robotId != -1L) {
+            lifecycleScope.launch {
+                viewModel.loadRobot(robotId)
+            }
         }
 
-        findViewById<Button>(R.id.btn_add_weapon).setOnClickListener {
-            robot.parts.add(RobotPart("weapon", "Laser", health = 20, damage = 30, range = 100))
-            updateUI()
+        viewModel.robot.observe(this) { robot ->
+            updateUI(robot)
         }
 
         findViewById<Button>(R.id.btn_import).setOnClickListener {
@@ -56,7 +65,7 @@ class BuildActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_export).setOnClickListener {
-            robot.name = etName.text.toString().ifEmpty { robot.name }
+            val robot = viewModel.robot.value ?: return@setOnClickListener
             val json = gson.toJson(robot)
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
@@ -64,9 +73,11 @@ class BuildActivity : AppCompatActivity() {
             }
             startActivity(Intent.createChooser(intent, "Export Robot"))
         }
+
+        // TODO: Add part selection UI
     }
 
-    private fun updateUI() {
+    private fun updateUI(robot: Robot) {
         etName.setText(robot.name)
         tvParts.text = "Parts: ${robot.parts.map { it.name }.joinToString(", ")}"
     }
