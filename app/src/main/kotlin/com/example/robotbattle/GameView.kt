@@ -89,7 +89,7 @@ class GameView @JvmOverloads constructor(
                         enemyHealth -= 5
                         if (playerHealth <= 0 || enemyHealth <= 0) {
                             // End battle
-                            interrupted()
+                            interrupt()
                         }
                     }
 
