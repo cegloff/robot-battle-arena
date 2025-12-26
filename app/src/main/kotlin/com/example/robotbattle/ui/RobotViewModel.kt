@@ -6,22 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.robotbattle.PartTemplate
 import com.example.robotbattle.Robot
+import com.example.robotbattle.ValidationResult
 import com.example.robotbattle.data.RobotRepository
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 class RobotViewModel(private val repository: RobotRepository) : ViewModel() {
     private val _robot = MutableLiveData(Robot("New Robot", mutableListOf()))
     val robot: LiveData<Robot> get() = _robot
-
-    init {
-        viewModelScope.launch {
-            _robot.asFlow().debounce(500).collect {
-                repository.saveOrUpdate(it)
-            }
-        }
-    }
 
     fun addPart(template: PartTemplate) {
         val current = _robot.value ?: return
@@ -48,9 +39,11 @@ class RobotViewModel(private val repository: RobotRepository) : ViewModel() {
             _robot.value = loaded
         }
     }
-}
 
-sealed class ValidationResult {
-    object Success : ValidationResult()
-    data class Error(val message: String) : ValidationResult()
+    fun saveRobot() {
+        val current = _robot.value ?: return
+        viewModelScope.launch {
+            repository.saveOrUpdate(current)
+        }
+    }
 }

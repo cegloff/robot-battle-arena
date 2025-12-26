@@ -40,8 +40,8 @@ jobs:
         echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
         
         # Accept licenses and install required components (matching compileSdk 34)
-        yes | sdkmanager --licenses
-        sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+        yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+        $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew

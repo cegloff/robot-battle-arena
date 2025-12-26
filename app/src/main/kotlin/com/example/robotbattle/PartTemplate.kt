@@ -9,6 +9,6 @@ data class PartTemplate(
     val range: Int? = null
 ) {
     fun toPart(): RobotPart {
-        return RobotPart(name, health, damage ?: 0, speed ?: 0, range ?: 0)
+        return RobotPart(type, name, health, damage ?: 0, range ?: 0, speed ?: 0)
     }
 }

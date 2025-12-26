@@ -10,12 +10,24 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.robotbattle.data.AppDatabase
+import com.example.robotbattle.data.RobotRepository
 import com.example.robotbattle.ui.RobotViewModel
 import com.google.gson.Gson
-import java.io.BufferedReader
+import kotlinx.coroutines.launch
+
+class RobotViewModelFactory(private val repository: RobotRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(RobotViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return RobotViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
 
 class BuildActivity : AppCompatActivity() {
     private lateinit var viewModel: RobotViewModel
@@ -28,8 +40,8 @@ class BuildActivity : AppCompatActivity() {
             contentResolver.openInputStream(it)?.use { input ->
                 val json = input.bufferedReader().use { reader -> reader.readText() }
                 try {
-                    robot = gson.fromJson(json, Robot::class.java)
-                    updateUI()
+                    val importedRobot = gson.fromJson(json, Robot::class.java)
+                    updateUI(importedRobot)
                     Toast.makeText(this, "Robot imported", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     Toast.makeText(this, "Invalid robot file", Toast.LENGTH_SHORT).show()
