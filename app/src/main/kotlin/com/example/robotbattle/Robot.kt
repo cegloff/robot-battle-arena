@@ -9,17 +9,6 @@ data class RobotPart(
     val speed: Int = 0
 )
 
-data class PartTemplate(
-    val type: String,
-    val name: String,
-    val health: Int = 0,
-    val damage: Int = 0,
-    val range: Int = 0,
-    val speed: Int = 0
-) {
-    fun toPart(): RobotPart = RobotPart(type, name, health, damage, range, speed)
-}
-
 sealed class ValidationResult {
     object Success : ValidationResult()
     data class Error(val message: String) : ValidationResult()
