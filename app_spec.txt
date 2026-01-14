@@ -1,0 +1,3 @@
+<project_specification>
+Create a logic diagram(s) in excalidraw format describing how the application in this repo functions.
+</project_specification>
